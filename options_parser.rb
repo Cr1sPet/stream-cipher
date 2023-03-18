@@ -4,17 +4,11 @@ class OptionsParser
   def self.parse
     options = {}
     OptionParser.new do |opt|
-      opt.on('-fFILENAME', '--feedback_filename FILENAME') do |o|
-        options[:feedback_filename] = o
-      end
-      opt.on('-kFILENAME', '--key_filename FILENAME') do |o|
-        options[:key_filename] = o
-      end
+      opt.on('-fFILENAME', '--feedback_filename FILENAME') { |o| options[:feedback_filename] = o }
+      opt.on('-kFILENAME', '--key_filename FILENAME') { |o| options[:key_filename] = o }
       opt.on('-bNUMBER', '--block_length NUMBER') { |o| options[:block_length] = o.to_i }
-      opt.on('-lNUMBER', '--length NUMBER') do |o|
-        options[:length] = o.to_i
-      end
-
+      opt.on('-lNUMBER', '--length NUMBER') { |o| options[:length] = o.to_i }
+      opt.on('-mENCRYPT|DECRYPT', '--mode ENCRYPT|DECRYPT') { |o| options[:mode] = o }
       opt.on('-h', '--help', 'Prints this help') do
         puts opt
         exit
