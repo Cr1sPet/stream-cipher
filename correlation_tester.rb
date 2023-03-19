@@ -19,38 +19,17 @@ class CorrelationTester
   attr_reader :m_seq, :k, :r, :n
 
   def correlation_test
-    @k.each do |k|
-      m_i = 0.0
-      (0..m_seq.length - k - 1).each do |j|
-        m_i += m_seq[j].to_f
-      end
-      m_i *= 1 / (m_seq.length - k).to_f
+    k.each do |i|
+      debugger
+      m_i = m_seq[0..-i-1].sum.to_f / (m_seq.length - i)
+      m_i_k = m_seq[i..-1].sum.to_f / (m_seq.length - i)
 
-      m_i_k = 0.0
-      (k..m_seq.length - 1).each do |j|
-        m_i_k += m_seq[j].to_f
-      end
-      m_i_k *= 1 / (m_seq.length - k).to_f
+      d_i = m_seq[0..-i-1].inject(0) { |sum, x| sum + (x.to_f - m_i)**2 } / (m_seq.length - i - 1)
+      d_i_k = m_seq[i..-1].inject(0) { |sum, x| sum + (x.to_f - m_i_k)**2 } / (m_seq.length - i - 1)
 
-      d_i = 0.0
-      (0..m_seq.length - k - 1).each do |j|
-        d_i += (m_seq[j].to_f - m_i)**2
-      end
-      d_i *= 1 / (m_seq.length - k - 1).to_f
-
-      d_i_k = 0.0
-      (k..m_seq.length - 1).each do |j|
-        d_i_k += (m_seq[j].to_f - m_i_k)**2
-      end
-      d_i_k *= 1 / (m_seq.length - k - 1).to_f
-
-      @r[k] = 0.0
-      (0..m_seq.length - k - 1).each do |i|
-        @r[k] += (m_seq[i].to_f - m_i) * (m_seq[i + k].to_f - m_i_k)
-      end
-      @r[k] /= (m_seq.length - k).to_f
-      @r[k] /= Math.sqrt(d_i * d_i_k)
-      @r[k] = @r[k].abs
+      r[i] = m_seq.each_cons(i+1).inject(0) { |sum, pair| sum + (pair[0].to_f - m_i) * (pair[i].to_f - m_i_k) } / (m_seq.length - i)
+      r[i] /= Math.sqrt(d_i * d_i_k)
+      r[i] = r[i].abs
     end
   end
 
