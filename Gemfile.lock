@@ -2,17 +2,10 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    concurrent-ruby (1.2.2)
+    bitwise (0.6.0)
     debug (1.7.1)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
-    dry-core (1.0.0)
-      concurrent-ruby (~> 1.0)
-      zeitwerk (~> 2.6)
-    dry-monads (1.6.0)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 1.0, < 2)
-      zeitwerk (~> 2.6)
     io-console (0.6.0)
     irb (1.6.3)
       reline (>= 0.3.0)
@@ -40,14 +33,13 @@ GEM
       parser (>= 3.2.1.0)
     ruby-progressbar (1.11.0)
     unicode-display_width (2.4.2)
-    zeitwerk (2.6.7)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bitwise
   debug
-  dry-monads
   optparse
   rubocop
 

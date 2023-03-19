@@ -22,8 +22,7 @@ class MSequenceGenerator
     cache = { state => true }
 
     count.times do
-      digits = feedback_bits.map { |bit| state[bit - 1] }
-      result = digits.inject(:^)
+      result = feedback_bits.map { |bit| state[bit - 1] }.inject(:^)
       state = (state >> 1) | (result << length - 1)
       break if cache[state]
 
