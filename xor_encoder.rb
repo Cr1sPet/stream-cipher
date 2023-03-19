@@ -1,39 +1,26 @@
 class XorEncoder
   def self.call(...) = new(...).call
 
-  def initialize(m_seq:, input:, output:)
+  def initialize(m_seq:, input:)
     @m_seq = m_seq
     @input = input
-    @output = output
   end
 
   def call
-    key = []
-    m_seq.each_slice(8) do |slice|
-      n = slice.inject(0) { |sum, bit| (sum << 1) + bit }
-      key << n
-    end
-    key = key.take(input.size)
-
-    encode(input, key, output)
-
+    key = Utils.bit_array_to_byte_array(m_seq).take(input.size)
+    encode(input, key)
   end
 
 
   private
 
-  attr_reader :m_seq, :input, :output
+  attr_reader :m_seq, :input
 
-  def encode(input, key, output)
+  def encode(input, key)
     result = []
     input.each_with_index do |byte, i|
       result << (byte ^ key[i])
     end
-
-    File.open(output, "wb") do |file|
-      file.write(result.pack("C*"))
-    end
-
     result
   end
 end

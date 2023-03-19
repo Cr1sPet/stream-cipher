@@ -4,29 +4,32 @@ class SerialTester
   def initialize(m_sequence:, block_length:)
     @m_sequence = m_sequence
     @block_length = block_length
+    @criteries = [(0.584..6.251), (2.833..12.017), (8.547..22.307)]
   end
 
   def call
     serial_test()
   end
 
+
   private
 
-  attr_reader :m_sequence, :block_length
+
+  attr_reader :m_sequence, :block_length, :criteries
 
   def pirson_criterion(psi, k)
     result = case k
              when 2
-               (0.584..6.251).include?(psi)
+               criteries[0].include?(psi)
              when 3
-               (2.833..12.017).include?(psi)
+              criteries[1].include?(psi)
              when 4
-               (8.547..22.307).include?(psi)
+              criteries[2].include?(psi)
              else
                raise ArgumentError.new('размер блока должен принадлжеить интервалу от 2 до 4')
              end
     unless result
-      raise RuntimeError.new("Хи не попадает в необходимый интервал при k == #{k}")
+      raise RuntimeError.new("Хи #{psi} не попадает в необходимый интервал #{criteries[block_length - 2]} при k == #{block_length}")
     end
   end
 
@@ -56,12 +59,13 @@ class SerialTester
     theoretical_n = theoretical_n(m_sequence, block_length)
     psi = calculate_psi(theoretical_n, m_series_counts)
 
-    puts m_series_counts
-    puts m_series_frequencies
-    puts theoretical_n
-    puts psi
+    # puts m_series_counts
+    # puts m_series_frequencies
+    # puts theoretical_n
+    # puts psi
     begin
       pirson_criterion(psi, block_length)
+      puts "Хи #{psi} попадает в необходимый интервал #{criteries[block_length - 2]} при k == #{block_length}"
       puts 'Сериальный тест пройден!'
       rescue RuntimeError => err
         puts err.message

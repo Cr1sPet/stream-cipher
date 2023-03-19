@@ -11,6 +11,7 @@ require_relative 'xor_encoder'
 require_relative 'utils'
 
 KEY_FILE = 'key.txt'
+PLAIN = 'wow.jpeg'
 
 def read_key(key_file:)
   key_file ||= KEY_FILE
@@ -32,14 +33,16 @@ def start(options)
   state, length = generate_key_or_use_from_file(options)
   m_sequence = MSequenceGenerator.call(length: length, state: state, feedback_filename: options[:feedback_filename])
 
-  # SerialTester.call(m_sequence: m_sequence, block_length: options[:block_length])
-  # CorrelationTester.call(m_sequence: m_sequence)
+  SerialTester.call(m_sequence: m_sequence, block_length: options[:block_length])
+  CorrelationTester.call(m_sequence: m_sequence)
 
-  ntest = 'wow.jpeg'
-  input = Utils.read_bin_file(ntest)
+  input = Utils.read_bin_file(PLAIN)
 
-  encrypted = XorEncoder.call(m_seq: m_sequence, input: input, output: 'encrypted-wow.jpeg')
-  decrypted = XorEncoder.call(m_seq: m_sequence, input: encrypted, output: 'decrypted-wow.jpeg')
+  encrypted = XorEncoder.call(m_seq: m_sequence, input: input)
+  decrypted = XorEncoder.call(m_seq: m_sequence, input: encrypted)
+
+  Utils.write_bin_file(encrypted, "encrypted-#{PLAIN}")
+  Utils.write_bin_file(decrypted, "decrypted-#{PLAIN}")
 
   bit_input = Utils.byte_array_to_bit_array(input)
   bit_encrypted = Utils.byte_array_to_bit_array(encrypted)
