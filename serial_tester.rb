@@ -15,13 +15,18 @@ class SerialTester
   attr_reader :m_sequence, :block_length
 
   def pirson_criterion(psi, k)
-    case k
-    when 2
-      psi >= 0.584 && psi <= 6.251
-    when 3
-      psi >= 2.833 && psi <= 12.017
-    when 4
-      psi >= 8.547 && psi <= 22.307
+    result = case k
+             when 2
+               (0.584..6.251).include?(psi)
+             when 3
+               (2.833..12.017).include?(psi)
+             when 4
+               (8.547..22.307).include?(psi)
+             else
+               raise ArgumentError.new('размер блока должен принадлжеить интервалу от 2 до 4')
+             end
+    unless result
+      raise RuntimeError.new("Хи не попадает в необходимый интервал при k == #{k}")
     end
   end
 
@@ -55,6 +60,11 @@ class SerialTester
     puts m_series_frequencies
     puts theoretical_n
     puts psi
-    puts "Pirson criterion result: #{pirson_criterion(psi, block_length)}"
+    begin
+      pirson_criterion(psi, block_length)
+      puts 'Сериальный тест пройден!'
+      rescue RuntimeError => err
+        puts err.message
+    end
   end
 end

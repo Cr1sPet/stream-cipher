@@ -16,9 +16,9 @@ end
 
 def start(options)
   case options[:mode]
-    when 'ENCRYPT'
+  when 'ENCRYPT'
 
-    when 'DECRYPT'
+  when 'DECRYPT'
 
   end
   state = if options[:key_filename]
@@ -38,7 +38,7 @@ end
 begin
   options = OptionsParser.parse
   start(options)
-# rescue StandardError => e
-#   puts e.message
-#   puts e.class
+  # rescue StandardError => e
+  #   puts e.message
+  #   puts e.class
 end
